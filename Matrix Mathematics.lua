@@ -24,7 +24,6 @@ local function MatrixDetection(Matrix, errmsg) --matrix error detection
 end
 
 
-
 function module.CreateRandom(Size, MinNumSize, MaxNumSize)
 	
 	--error detection
