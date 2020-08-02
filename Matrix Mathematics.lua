@@ -6,7 +6,7 @@ local function MatrixDetection(Matrix, errmsg) --matrix error detection
 		error(errmsg)
 	elseif #Matrix == 0 then
 		error(errmsg)
-	else
+	else	
 		for i = 1,#Matrix do
 			if type(Matrix[i]) ~= "table" then
 				error(errmsg)
