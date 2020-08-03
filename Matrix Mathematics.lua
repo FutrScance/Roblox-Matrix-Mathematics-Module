@@ -169,4 +169,20 @@ function module.Multiply(MatrixA, MatrixB)
 	return NewMatrix
 end
 
+function module.Map(Matrix, Funct)
+	MatrixDetection(Matrix, "Arg1 must be a valid matrix.(Arg1)")
+	if type(Funct) ~= "function" then
+		error("Input function is not a function")
+	end
+	
+	local rownum = #Matrix[1]
+	local NewMatrix = Matrix--Matrix in this context is not used, it is used to create an "empty" matrix without having to create a new one
+	for i=1,#Matrix do
+		for o=1,rownum do
+			NewMatrix[i][o] = Funct(Matrix[i][o])
+		end
+	end
+	return NewMatrix
+end
+
 return module
