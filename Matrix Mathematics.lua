@@ -1,5 +1,4 @@
-local module = {}
-local rng = Random.new(tick())
+local rng = Random.new()
 
 local function MatrixDetection(Matrix, errmsg) --matrix error detection
 	if type(Matrix) ~= "table" then 
@@ -23,10 +22,10 @@ local function MatrixDetection(Matrix, errmsg) --matrix error detection
 	end
 end
 
+local module = {}
 
 function module.CreateRandom(Size, MinNumSize, MaxNumSize)
-	
-	--error detection
+	--type checking
 	if type(MinNumSize) ~= "number" then
 		error("MinNumSize must be a number.(Arg2)")
 	elseif type(MaxNumSize) ~= "number" then
@@ -35,7 +34,7 @@ function module.CreateRandom(Size, MinNumSize, MaxNumSize)
 		error("Matrix size must be a table.(Arg1)")
 	elseif MinNumSize >= MaxNumSize then
 		error("Minimum must be less than Maximum.(Arg3)")
-	elseif Size[1]<1 or Size[2]<1 then
+	elseif Size[1] < 1 or Size[2] < 1 then
 		error("Size of Matrix must be at least 1x1.(Arg1)")
 	end
 	
@@ -43,16 +42,16 @@ function module.CreateRandom(Size, MinNumSize, MaxNumSize)
 	--setting up matrix value sizes
 	local Min = 0
 	if MinNumSize >= 0 then
-		Min = MinNumSize*1000000
+		Min = MinNumSize * 1000000
 	else
-		Min = (MinNumSize+1)*1000000
+		Min = (MinNumSize + 1) * 1000000
 	end
 	
 	local Max = 0
 	if MaxNumSize >= 0 then
-		Max = (MaxNumSize-1)*1000000
+		Max = (MaxNumSize - 1) * 1000000
 	else
-		Max = MaxNumSize*1000000
+		Max = MaxNumSize * 1000000
 	end
 	
 	
@@ -61,7 +60,7 @@ function module.CreateRandom(Size, MinNumSize, MaxNumSize)
 	for i = 1,Size[2] do
 		local row = {}
 		for o = 1,Size[1] do
-			row[o] = rng:NextNumber(Min, Max)/1000000
+			row[o] = rng:NextNumber(Min, Max) / 1000000
 		end
 		Matrix[i] = row
 	end
@@ -70,12 +69,12 @@ function module.CreateRandom(Size, MinNumSize, MaxNumSize)
 end
 
 function module.Transpose(Matrix)
-	
 	--error detection
 	MatrixDetection(Matrix, "Argument must be a valid Matrix.(Arg1)")
 	
 	--create new matrix
 	local NewMatrix = {}
+	
 	for i = 1,#Matrix[1] do
 		NewMatrix[i] = {}
 	end
@@ -93,8 +92,7 @@ end
 
 
 function module.ScalarMultiply(Scalar, Matrix)
-	
-	--error detection
+	--type checking
 	if type(Scalar) ~= "number" then
 		error("Scalar must be a number.(Arg1)")
 	else
@@ -106,7 +104,7 @@ function module.ScalarMultiply(Scalar, Matrix)
 	local rownum = #Matrix[1]
 	for i = 1,#NewMatrix do
 		for o = 1,rownum do
-			NewMatrix[i][o] = NewMatrix[i][o]*Scalar
+			NewMatrix[i][o] = NewMatrix[i][o] * Scalar
 		end
 	end
 	
@@ -114,21 +112,21 @@ function module.ScalarMultiply(Scalar, Matrix)
 end
 
 function module.Add(MatrixA, MatrixB)
-	
 	--error detection
 	MatrixDetection(MatrixA, "Matrix A is not a valid Matrix.(Arg1)")
 	MatrixDetection(MatrixB, "Matrix B is not a valid Matrix.(Arg2)")
-	local err = {}
+	
 	if #MatrixA ~= #MatrixB or #MatrixA[1] ~= #MatrixB[1] then
 		error("matrices must be the same size.(Arg1/Arg2)")
 	end
 	
 	--add the matrices together
 	local rownum = #MatrixA[1]
-	local NewMatrix = MatrixA --MatrixA is not used in this context, its simply to get the size of the matrix.
+	--MatrixA is not used in this context, its simply to get the size of the matrix.
+	local NewMatrix = MatrixA
 	for i = 1,#MatrixA do
 		for o = 1,rownum do
-			NewMatrix[i][o] = MatrixA[i][o]+MatrixB[i][o]
+			NewMatrix[i][o] = MatrixA[i][o] + MatrixB[i][o]
 		end
 	end
 	
@@ -136,10 +134,10 @@ function module.Add(MatrixA, MatrixB)
 end
 
 function module.Multiply(MatrixA, MatrixB)
-	
-	--error detetion
+	--error detection
 	MatrixDetection(MatrixA, "Matrix A is not a valid Matrix.(Arg1)")
 	MatrixDetection(MatrixB, "Matrix B is not a valid Matrix.(Arg2)")
+	
 	if #MatrixA[1] ~= #MatrixB then
 		error("The number of rows in MatrixA and columns in MatrixB must be equal.(Arg1/Arg2)")
 	end
@@ -161,7 +159,7 @@ function module.Multiply(MatrixA, MatrixB)
 	for i = 1,colnum do
 		for o = 1,rownum do
 			for p = 1,midnum do
-				NewMatrix[i][o] = NewMatrix[i][o]+MatrixA[i][p]*MatrixB[p][o]
+				NewMatrix[i][o] = NewMatrix[i][o] + MatrixA[i][p] * MatrixB[p][o]
 			end
 		end
 	end
@@ -176,7 +174,8 @@ function module.Map(Matrix, Funct)
 	end
 	
 	local rownum = #Matrix[1]
-	local NewMatrix = Matrix--Matrix in this context is not used, it is used to create an "empty" matrix without having to create a new one
+	--Matrix in this context is not used, it is used to create an "empty" matrix without having to create a new one
+	local NewMatrix = Matrix
 	for i=1,#Matrix do
 		for o=1,rownum do
 			NewMatrix[i][o] = Funct(Matrix[i][o])
